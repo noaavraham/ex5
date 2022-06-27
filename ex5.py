@@ -12,7 +12,18 @@ def names_of_registered_students(input_json_path, course_name):
     :param course_name: The name of the course.
     :return: List of the names of the students.
     """
-    pass
+    students_in_the_course = []
+
+    with open(input_json_path, 'r') as f:
+        students_dict = json.load(f)
+
+    for v in students_dict.values():
+        for ele in v["registered_courses"]:
+            if course_name in ele:
+                students_in_the_course.append(v["student_name"])
+
+
+    return students_in_the_course
 
 
 def enrollment_numbers(input_json_path, output_file_path):
@@ -23,7 +34,26 @@ def enrollment_numbers(input_json_path, output_file_path):
     :param input_json_path: Path of the students database json file.
     :param output_file_path: Path of the output text file.
     """
-    pass
+    students_in_course_dict = {}
+    # sort = True
+    # separator = " "
+
+    with open(input_json_path, 'r') as f:
+        students_dict = json.load(f)
+
+    for v in students_dict.values():
+        for ele in v["registered_courses"]:
+            if ele in students_in_course_dict:
+                students_in_course_dict[ele] += 1
+            else:
+                students_in_course_dict[ele] = 1
+
+    with open(output_file_path, 'w') as f:
+        for k, v in sorted(students_in_course_dict.items()):
+            temp = '"{}" {}\n'.format(k, v)
+            f.write(temp)
+
+    #    json.dump(students_in_course_dict, f, separators=("\n", " "), sort_keys=sort)
 
 
 
