@@ -12,14 +12,16 @@ def names_of_registered_students(input_json_path, course_name):
     :return: List of the names of the students.
     """
     students_in_the_course = []
+    registered_courses_key = "registered_courses"
+    student_name_key = "student_name"
 
     with open(input_json_path, 'r') as f:
         students_dict = json.load(f)
 
     for v in students_dict.values():
-        for ele in v["registered_courses"]:
+        for ele in v[registered_courses_key]:
             if course_name in ele:
-                students_in_the_course.append(v["student_name"])
+                students_in_the_course.append(v[student_name_key])
 
     return students_in_the_course
 
@@ -33,14 +35,13 @@ def enrollment_numbers(input_json_path, output_file_path):
     :param output_file_path: Path of the output text file.
     """
     students_in_course_dict = {}
-    # sort = True
-    # separator = " "
+    registered_courses_key = "registered_courses"
 
     with open(input_json_path, 'r') as f:
         students_dict = json.load(f)
 
     for v in students_dict.values():
-        for ele in v["registered_courses"]:
+        for ele in v[registered_courses_key]:
             if ele in students_in_course_dict:
                 students_in_course_dict[ele] += 1
             else:
@@ -50,8 +51,6 @@ def enrollment_numbers(input_json_path, output_file_path):
         for k, v in sorted(students_in_course_dict.items()):
             temp = '"{}" {}\n'.format(k, v)
             f.write(temp)
-
-    #    json.dump(students_in_course_dict, f, separators=("\n", " "), sort_keys=sort)
 
 
 def courses_for_lecturers(json_directory_path, output_json_path):
@@ -73,13 +72,13 @@ def courses_for_lecturers(json_directory_path, output_json_path):
                 courses_dict = json.load(f)
 
             for v in courses_dict.values():
-                for ele in v["lecturers"]:
+                for ele in v[lecturers_key]:
                     if ele in lecturers_courses:
-                        if v["course_name"] not in lecturers_courses[ele]:
-                            lecturers_courses[ele].append(v["course_name"])
+                        if v[course_name_key] not in lecturers_courses[ele]:
+                            lecturers_courses[ele].append(v[course_name_key])
 
                     else:
-                        lecturers_courses[ele] = [v["course_name"]]
+                        lecturers_courses[ele] = [v[course_name_key]]
 
     with open(output_json_path, 'w') as f:
         json.dump(lecturers_courses, f, indent=4)
