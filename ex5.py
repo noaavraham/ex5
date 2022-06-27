@@ -2,7 +2,6 @@ import json
 import os
 
 
-
 def names_of_registered_students(input_json_path, course_name):
     """
     This function returns a list of the names of the students who registered for
@@ -21,7 +20,6 @@ def names_of_registered_students(input_json_path, course_name):
         for ele in v["registered_courses"]:
             if course_name in ele:
                 students_in_the_course.append(v["student_name"])
-
 
     return students_in_the_course
 
@@ -56,7 +54,6 @@ def enrollment_numbers(input_json_path, output_file_path):
     #    json.dump(students_in_course_dict, f, separators=("\n", " "), sort_keys=sort)
 
 
-
 def courses_for_lecturers(json_directory_path, output_json_path):
     """
     This function writes the courses given by each lecturer in json format.
@@ -64,7 +61,25 @@ def courses_for_lecturers(json_directory_path, output_json_path):
     :param json_directory_path: Path of the semsters_data files.
     :param output_json_path: Path of the output json file.
     """
-    pass
+    lecturers_courses = {}
+    lecturers_key = "lecturers"
+    course_name_key = "course_name"
 
+    for json_file in os.listdir(json_directory_path):
+        if json_file.endswith('.json'):
+            json_file_path = os.path.join(json_directory_path, json_file)
 
+            with open(json_file_path, 'r') as f:
+                courses_dict = json.load(f)
 
+            for v in courses_dict.values():
+                for ele in v["lecturers"]:
+                    if ele in lecturers_courses:
+                        if v["course_name"] not in lecturers_courses[ele]:
+                            lecturers_courses[ele].append(v["course_name"])
+
+                    else:
+                        lecturers_courses[ele] = [v["course_name"]]
+
+    with open(output_json_path, 'w') as f:
+        json.dump(lecturers_courses, f, indent=4)
