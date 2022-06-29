@@ -18,10 +18,10 @@ def names_of_registered_students(input_json_path, course_name):
     with open(input_json_path, 'r') as f:
         students_dict = json.load(f)
 
-    for v in students_dict.values():
-        for ele in v[registered_courses_key]:
-            if course_name in ele:
-                students_in_the_course.append(v[student_name_key])
+    for value in students_dict.values():
+        for element in value[registered_courses_key]:
+            if course_name in element:
+                students_in_the_course.append(value[student_name_key])
 
     return students_in_the_course
 
@@ -40,16 +40,16 @@ def enrollment_numbers(input_json_path, output_file_path):
     with open(input_json_path, 'r') as f:
         students_dict = json.load(f)
 
-    for v in students_dict.values():
-        for ele in v[registered_courses_key]:
-            if ele in students_in_course_dict:
-                students_in_course_dict[ele] += 1
+    for value in students_dict.values():
+        for element in value[registered_courses_key]:
+            if element in students_in_course_dict:
+                students_in_course_dict[element] += 1
             else:
-                students_in_course_dict[ele] = 1
+                students_in_course_dict[element] = 1
 
     with open(output_file_path, 'w') as f:
-        for k, v in sorted(students_in_course_dict.items()):
-            temp = '"{}" {}\n'.format(k, v)
+        for key, value in sorted(students_in_course_dict.items()):
+            temp = '"{}" {}\n'.format(key, value)
             f.write(temp)
 
 
@@ -71,14 +71,14 @@ def courses_for_lecturers(json_directory_path, output_json_path):
             with open(json_file_path, 'r') as f:
                 courses_dict = json.load(f)
 
-            for v in courses_dict.values():
-                for ele in v[lecturers_key]:
-                    if ele in lecturers_courses:
-                        if v[course_name_key] not in lecturers_courses[ele]:
-                            lecturers_courses[ele].append(v[course_name_key])
+            for value in courses_dict.values():
+                for element in value[lecturers_key]:
+                    if element in lecturers_courses:
+                        if value[course_name_key] not in lecturers_courses[element]:
+                            lecturers_courses[element].append(value[course_name_key])
 
                     else:
-                        lecturers_courses[ele] = [v[course_name_key]]
+                        lecturers_courses[element] = [value[course_name_key]]
 
     with open(output_json_path, 'w') as f:
         json.dump(lecturers_courses, f, indent=4)
